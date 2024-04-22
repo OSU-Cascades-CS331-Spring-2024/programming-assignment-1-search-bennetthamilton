@@ -133,10 +133,10 @@ def main():
     write_results("solutions.txt", results)
 
     # get statistics from solution file
-    compute_statistics("solutions.txt")
+    stats = compute_statistics("solutions.txt")
 
     # write statistics to file
-    write_results("statistics.txt", results)
+    write_results("statistics.txt", stats)
 
     # print success message
     print("Program completed successfully!")
