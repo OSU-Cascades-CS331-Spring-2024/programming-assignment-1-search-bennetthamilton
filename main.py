@@ -11,9 +11,15 @@ import sys
 import argparse
 from map import Map
 from city import City
+from search import SearchAlgorithm, BreadthFirstSearch, IterativeDLS, UniformCostSearch, AStarSearch
 
 # define constants
-SEARCH_ALGORITHMS = ["bfs", "dls", "ucs", "astar"]
+SEARCH_ALGOS = {
+    "bfs": BreadthFirstSearch,
+    "dls": IterativeDLS,
+    "ucs": UniformCostSearch,
+    "astar": AStarSearch
+}
 
 # function to parse command line arguments
 # ref: https://docs.python.org/3/library/argparse.html
@@ -28,13 +34,17 @@ def parse_args():
     parser.add_argument("map_file", help="Text file containing map data")
     parser.add_argument("-A", "--start_city", help="Starting city")
     parser.add_argument("-B", "--end_city", help="Ending city")
-    parser.add_argument("-S", "--search_algorithm", choices=SEARCH_ALGORITHMS, default=SEARCH_ALGORITHMS[0], help="Search algorithm to use (default: BFS)")
+    parser.add_argument("-S", "--search_algorithm", choices=SEARCH_ALGOS.keys(), default="bfs", help="Search algorithm to use (default: BFS)")
+
+    print("Parsing command line arguments...")
 
     return parser.parse_args()
 
 # function to read map data from file
 def read_map_data(map_file):
     map_data = Map()
+
+    print("Reading map data from file...")
 
     with open(map_file, "r") as file:
         # read each line in file
@@ -59,6 +69,8 @@ def read_map_data(map_file):
                 connected_city = edges[i][3:]   # remove 'va-' from city name
                 distance = float(edges[i+1])
                 map_data.add_connection(city_name, connected_city, distance)
+
+    print("Map data read successfully!")
             
     return map_data
 
@@ -69,7 +81,7 @@ def run_search(map_file, start_city, end_city, search_algorithm):
 
 # function to run all search algorithms
 def run_all_searches(map_file, start_city, end_city):
-    for algorithm in SEARCH_ALGORITHMS:
+    for algorithm in SEARCH_ALGOS.keys():
         run_search(map_file, start_city, end_city, algorithm)
 
 # main function to run program
