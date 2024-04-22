@@ -9,6 +9,7 @@
 
 import sys
 import argparse
+from map import Map
 
 # define constants
 SEARCH_ALGORITHMS = ["bfs", "dls", "ucs", "astar"]
@@ -30,6 +31,20 @@ def parse_args():
 
     return parser.parse_args()
 
+# function to read map data from file
+def read_map_data(map_file):
+    map_data = Map()
+
+    with open(map_file, "r") as file:
+        # read each line in file
+        for line in file:
+            # split into parts
+            # assign data
+            # add city and edges to map
+            pass
+
+    return map_data
+
 # function to run search algorithm
 def run_search(map_file, start_city, end_city, search_algorithm):
     # TODO
@@ -45,6 +60,9 @@ def main():
     # Parse command line arguments
     args = parse_args()
     map_file = args.map_file
+
+    # Read map data from file
+    map_date = read_map_data(map_file)
 
     # if start and end are not provided, use predefined city pairs
     if not (args.start and args.goal):
