@@ -10,6 +10,7 @@
 import sys
 import argparse
 from map import Map
+from city import City
 
 # define constants
 SEARCH_ALGORITHMS = ["bfs", "dls", "ucs", "astar"]
@@ -38,11 +39,27 @@ def read_map_data(map_file):
     with open(map_file, "r") as file:
         # read each line in file
         for line in file:
-            # split into parts
-            # assign data
-            # add city and edges to map
-            pass
+            # split into city and edges
+            parts = line.strip().split(" --> ")
+            city_info = parts[0].split()
+            edges = parts[1].split()
 
+            # assign city data
+            city_name = city_info[0]
+            latitude = float(city_info[1]) + float(city_info[2])/60 + float(city_info[3])/3600
+            longitude = float(city_info[4]) + float(city_info[5])/60 + float(city_info[7])/3600
+            coordinate = (latitude, longitude)
+
+            # add city to map
+            map_data.add_city(City(city_name, coordinate))
+
+            # assign edge data
+            edges = parts[1].split()
+            for i in range(0, len(edges), 2):
+                connected_city = edges[i][3:]   # remove 'va-' from city name
+                distance = float(edges[i+1])
+                map_data.add_connection(city_name, connected_city, distance)
+            
     return map_data
 
 # function to run search algorithm
