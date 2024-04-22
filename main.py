@@ -89,7 +89,7 @@ def write_results(file, results):
     with open(file, "w") as file:
         file.write(results)
     # print success message
-    print("Results written to {file} successfully!")
+    print(f"Results written to {file} successfully!")
 
 def compute_statistics(file):
     # todo
@@ -106,7 +106,7 @@ def main():
     map_data = read_map_data(map_file)
 
     # if start and end are not provided, use predefined city pairs
-    if not (args.start and args.goal):
+    if not (args.start_city and args.end_city):
         city_pairs = [
             ("Brest", "Nice"),
             ("Montpellier", "Calais"),
