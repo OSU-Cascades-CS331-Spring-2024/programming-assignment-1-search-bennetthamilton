@@ -47,7 +47,7 @@ def read_map_data(map_file):
             # assign city data
             city_name = city_info[0]
             latitude = float(city_info[1]) + float(city_info[2])/60 + float(city_info[3])/3600
-            longitude = float(city_info[4]) + float(city_info[5])/60 + float(city_info[7])/3600
+            longitude = float(city_info[5]) + float(city_info[6])/60 + float(city_info[7])/3600
             coordinate = (latitude, longitude)
 
             # add city to map
