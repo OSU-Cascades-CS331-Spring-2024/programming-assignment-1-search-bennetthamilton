@@ -15,7 +15,6 @@ from search import SearchAlgorithm
 
 # define constants
 SEARCH_ALGOS = ["bfs", "dls", "ucs", "astar"]
-    
 
 # function to parse command line arguments
 # ref: https://docs.python.org/3/library/argparse.html
