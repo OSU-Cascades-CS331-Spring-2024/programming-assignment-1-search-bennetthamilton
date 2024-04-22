@@ -1,4 +1,4 @@
-# Map class for map of cities (obj) and connections (dict)
+# Descriptions: Map class to represent a map of cities (obj) and connections (dict)
 class Map:
     def __init__(self):
         self.cities = {}
