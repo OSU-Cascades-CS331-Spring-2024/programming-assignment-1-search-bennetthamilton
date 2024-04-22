@@ -4,8 +4,10 @@
 from collections import deque
 
 class SearchAlgorithm:
-    def __init__(self, problem):
-        self.problem = problem
+    def __init__(self, map_data, start_city, end_city):
+        self.map_data = map_data
+        self.start_city = start_city
+        self.end_city = end_city
 
     def search(self):
         raise NotImplementedError
