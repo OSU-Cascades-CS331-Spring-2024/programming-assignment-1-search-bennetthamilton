@@ -1,4 +1,5 @@
-
+# Description: Search algorithm classes to represent each algorithm (breadth-first search, 
+#              iterative deepening depth-limited search, uniform-cost search, and A* search)
 class SearchAlgorithm:
     def __init__(self, problem):
         self.problem = problem
@@ -6,7 +7,7 @@ class SearchAlgorithm:
     def search(self):
         raise NotImplementedError
     
-# Subclasses
+# Subclasses: BFS, IDS, UCS, A*
 class BreadthFirstSearch(SearchAlgorithm):
     def search(self):
         pass
