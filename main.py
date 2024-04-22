@@ -81,13 +81,28 @@ def run_all_searches(map, start_city, end_city):
     for algorithm in SEARCH_ALGOS:
         run_search(map, start_city, end_city, algorithm)
 
+def get_results():
+    # todo
+    pass
+
+def write_results(file, results):
+    with open(file, "w") as file:
+        file.write(results)
+    # print success message
+    print("Results written to {file} successfully!")
+
+def compute_statistics(file):
+    # todo
+    # print success message
+    print("Statistics computed successfully!")
+
 # main function to run program
 def main():
-    # Parse command line arguments
+    # parse command line arguments
     args = parse_args()
     map_file = args.map_file
 
-    # Read map data from file
+    # read map data from file
     map_data = read_map_data(map_file)
 
     # if start and end are not provided, use predefined city pairs
@@ -104,15 +119,29 @@ def main():
             ("Caen", "Strasbourg")
         ]
         for start, goal in city_pairs:
-            # Perform search for given city pairs using all search algorithm
+            # perform search for given city pairs using all search algorithm
             run_all_searches(map_data, start, goal)
-            # Write results to solutions.txt
-        pass
+            # get results
+            results = get_results()
     else:
-        # Perform search for given start and goal cities using specified search algorithm
+        # perform search for given start and goal cities using specified search algorithm
         run_search(map_data, args.start_city, args.end_city, args.search_algorithm)
-        # Write results to solutions.txt
-        pass
+        # get results
+        results = get_results()
+    
+    # write results to file
+    write_results("solutions.txt", results)
+
+    # get statistics from solution file
+    compute_statistics("solutions.txt")
+
+    # write statistics to file
+    write_results("statistics.txt", results)
+
+    # print success message
+    print("Program completed successfully!")
+
+        
 
 if __name__ == "__main__":
     main()
