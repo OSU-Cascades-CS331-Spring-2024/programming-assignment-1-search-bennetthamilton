@@ -70,9 +70,11 @@ def read_map_data(map_file):
     return map_data
 
 # function to run search algorithm
-def run_search(map, start_city, end_city, search_algorithm):
+def run_search(map, start_city, end_city, algorithm_type):
     # create search algorithm object
-    pass
+    search_algorithm = SearchAlgorithm.from_name(algorithm_type, map, start_city, end_city)
+    # run search algorithm
+    search_algorithm.search()
 
 # function to run all search algorithms
 def run_all_searches(map, start_city, end_city):
