@@ -18,7 +18,7 @@ SEARCH_ALGORITHMS = ["bfs", "dls", "ucs", "astar"]
 def parse_args():
     # check for correct number of arguments
     if len(sys.argv) < 2:
-        print("Usage: python script.py <map_file> [-A START_CITY] [-B END_CITY]")
+        print("Usage: python script.py <map_file> [-A START_CITY] [-B END_CITY] [-S SEARCH_ALGORITHM]")
         sys.exit(1)
     
     # get command line arguments
