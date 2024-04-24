@@ -14,7 +14,11 @@ from city import City
 from search import SearchAlgorithm
 
 # define constants
-SEARCH_ALGOS = ["bfs", "dls", "ucs", "astar"]
+SEARCH_ALGOS = ["bfs", 
+                "dls", 
+                "ucs", 
+                "astar"]
+DEFAULT_SEARCH_ALGO = "bfs"
 
 # function to parse command line arguments
 # ref: https://docs.python.org/3/library/argparse.html
@@ -29,7 +33,7 @@ def parse_args():
     parser.add_argument("map_file", help="Text file containing map data")
     parser.add_argument("-A", "--start_city", help="Starting city")
     parser.add_argument("-B", "--end_city", help="Ending city")
-    parser.add_argument("-S", "--search_algorithm", choices=SEARCH_ALGOS, default=SEARCH_ALGOS[0], help="Search algorithm to use (default: BFS)")
+    parser.add_argument("-S", "--search_algorithm", choices=SEARCH_ALGOS, default=DEFAULT_SEARCH_ALGO, help="Search algorithm to use (default: BFS)")
 
     print("Parsing command line arguments...")
 
@@ -69,12 +73,15 @@ def read_map_data(map_file):
             
     return map_data
 
-# function to run search algorithm
-def run_search(map, start_city, end_city, algorithm_type):
+# function to create search algorithm object
+def create_search_algorithm(algorithm_name, map, start_city, end_city):
     # create search algorithm object
-    search_algorithm = SearchAlgorithm.from_name(algorithm_type, map, start_city, end_city)
+    return SearchAlgorithm.from_name(algorithm_name, map, start_city, end_city)
+
+# function to run search algorithm
+def run_search(map, start_city, end_city, algorithm_obj):
     # run search algorithm
-    search_algorithm.search()
+    algorithm_obj.search()
 
 def get_results(search_algorithm):
     # returns a dictionary of results from search algorithm
@@ -119,7 +126,10 @@ def main():
         for start, goal in city_pairs:
             # perform search for given city pairs using ALL search algorithm
             for algorithm in SEARCH_ALGOS:
-                run_search(map_data, start, goal, algorithm)
+                # create search algorithm object
+                search_algorithm = create_search_algorithm(algorithm, map_data, start, goal)
+                # run search algorithm
+                run_search(map_data, start, goal, search_algorithm)
                 # append results to list
                 all_results.append(get_results(algorithm))
             
@@ -132,11 +142,14 @@ def main():
             # write statistics to file
             write_results("statistics.txt", stats)
     else:
+        # create search algorithm object
+        search_algorithm = create_search_algorithm(args.search_algorithm, map_data, args.start_city, args.end_city)
+
         # perform search for given start and goal cities using specified search algorithm
-        run_search(map_data, args.start_city, args.end_city, args.search_algorithm)
+        run_search(map_data, args.start_city, args.end_city, search_algorithm)
 
         # get results from search algorithm
-        results = get_results(args.search_algorithm)
+        results = get_results(search_algorithm)
 
         # write results to file
         write_results(results, "solutions.txt")
