@@ -92,7 +92,7 @@ def write_results(file, results):
     with open(file, "w") as file:
         file.write(results)
     # print success message
-    print(f"Results written to {file} successfully!")
+    print(f"Results written to {file.name} successfully!")
 
 def compute_statistics(all_results):
     # todo
