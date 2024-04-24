@@ -58,7 +58,7 @@ class SearchAlgorithm:
             current = self.parents[current]
         self.path.reverse()
 
-    def get_results(self):
+    def get_results_str(self):
         self.construct_path()
         result_dict = {
             "algorithm": self.__class__.__name__,
@@ -74,6 +74,20 @@ class SearchAlgorithm:
         # ref: https://docs.python.org/3/library/json.html
         results = json.dumps(result_dict, indent=4)
         return results
+    
+    def get_results(self):
+        self.construct_path()
+        result_dict = {
+            "algorithm": self.__class__.__name__,
+            "initial_city": self.start_city,
+            "goal_city": self.end_city,
+            "path": self.path,
+            "cost": self.map_data.compute_path_distance(self.path),
+            "nodes_explored": self.nodes_explored,
+            "nodes_expanded": self.nodes_expanded,
+            "nodes_maintained": self.nodes_maintained
+        }
+        return result_dict
         
     
 # Subclasses: BFS, IDS, UCS, A*
