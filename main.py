@@ -125,9 +125,9 @@ def main():
         all_results = []
         for start, goal in city_pairs:
             # perform search for given city pairs using ALL search algorithm
-            for algorithm in SEARCH_ALGOS:
+            for algorithm_str in SEARCH_ALGOS:
                 # create search algorithm object
-                search_algorithm = create_search_algorithm(algorithm, map_data, start, goal)
+                search_algorithm = create_search_algorithm(algorithm_str, map_data, start, goal)
                 # run search algorithm
                 run_search(map_data, start, goal, search_algorithm)
                 # append results to list
