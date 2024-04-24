@@ -152,7 +152,7 @@ def main():
         results = get_results(search_algorithm)
 
         # write results to file
-        write_results(results, "solutions.txt")
+        write_results("solutions.txt", results)
 
     # print success message
     print("Program completed successfully!")
