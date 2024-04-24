@@ -44,6 +44,19 @@ class SearchAlgorithm:
             self.path.append(current)
             current = self.parents[current]
         self.path.reverse()
+
+    def get_results(self):
+        self.construct_path()
+        return {
+            "initial_city": self.start_city,
+            "goal_city": self.end_city,
+            "algorithm": self.__class__.__name__,
+            "path": self.path,
+            "cost": self.map_data.compute_path_distance(self.path),
+            "nodes_explored": self.nodes_explored,
+            "nodes_expanded": self.nodes_expanded,
+            "nodes_maintained": self.nodes_maintained
+        }
         
     
 # Subclasses: BFS, IDS, UCS, A*
