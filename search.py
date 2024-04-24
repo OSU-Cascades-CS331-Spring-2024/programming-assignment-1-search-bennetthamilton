@@ -61,9 +61,9 @@ class SearchAlgorithm:
     def get_results(self):
         self.construct_path()
         result_dict = {
+            "algorithm": self.__class__.__name__,
             "initial_city": self.start_city,
             "goal_city": self.end_city,
-            "algorithm": self.__class__.__name__,
             "path": self.path,
             "cost": self.map_data.compute_path_distance(self.path),
             "nodes_explored": self.nodes_explored,
