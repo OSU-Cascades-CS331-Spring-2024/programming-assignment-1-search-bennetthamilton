@@ -83,7 +83,6 @@ class BreadthFirstSearch(SearchAlgorithm):
     def search(self):
         q = queue.Queue()
         q.put(self.start_city)
-        self.frontier.append(self.start_city)
         self.explored.add(self.start_city)
         self.parents = {self.start_city: None}
         
@@ -97,8 +96,10 @@ class BreadthFirstSearch(SearchAlgorithm):
                 if city not in self.explored:
                     q.put(city)
                     # update metrics
-                    self.frontier.append(city)
                     self.explored.add(city)
+                    self.nodes_explored += 1
+                    self.nodes_expanded += 1
+                    self.nodes_maintained = q.qsize()
                     self.parents[city] = current_city
 
         # print success message
