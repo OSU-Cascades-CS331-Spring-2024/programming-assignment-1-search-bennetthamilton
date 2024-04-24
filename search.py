@@ -170,6 +170,7 @@ class UniformCostSearch(SearchAlgorithm):
 
             # update metrics
             self.nodes_explored += 1
+            self.nodes_expanded += 1
             self.nodes_maintained = pq.qsize()
 
         # print success message
