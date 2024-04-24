@@ -134,7 +134,7 @@ def main():
                 all_results.append(get_results(search_algorithm))
             
             # write all results to file
-            write_results(all_results, "solutions.txt")
+            write_results("solutions.txt", all_results)
 
             # get statistics from results list
             stats = compute_statistics(all_results)
