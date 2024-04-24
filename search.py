@@ -126,10 +126,13 @@ class IterativeDLS(SearchAlgorithm):
                 for connected_city in self.map_data.connections[city]:
                     if recursive_dls(connected_city, depth-1):
                         # update metrics
-                        self.nodes_explored += 1
                         self.frontier.append(connected_city)
                         self.explored.add(connected_city)
                         self.parents[connected_city] = city
+                        self.nodes_explored += 1
+                        self.nodes_expanded += 1
+                        self.nodes_maintained = len(self.frontier)
+                        
                         return True
         
         for depth in range(self.depth_limit):
