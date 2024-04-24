@@ -9,6 +9,7 @@
 
 import sys
 import argparse
+import json
 from map import Map
 from city import City
 from search import SearchAlgorithm
@@ -122,7 +123,7 @@ def main():
             ("nice", "nantes"),
             ("caen", "strasbourg")
         ]
-        all_results = []
+        all_results_lst = []
         for start, goal in city_pairs:
             # perform search for given city pairs using ALL search algorithm
             for algorithm_str in SEARCH_ALGOS:
@@ -131,16 +132,19 @@ def main():
                 # run search algorithm
                 run_search(map_data, start, goal, search_algorithm)
                 # append results to list
-                all_results.append(get_results(search_algorithm))
+                all_results_lst.append(get_results(search_algorithm))
+
+            # convert all results to string TODO
+            all_results = json.dumps(all_results_lst, indent=4)
             
             # write all results to file
             write_results("solutions.txt", all_results)
 
-            # get statistics from results list
-            stats = compute_statistics(all_results)
+            # # get statistics from results list
+            # stats = compute_statistics(all_results)
 
-            # write statistics to file
-            write_results("statistics.txt", stats)
+            # # write statistics to file
+            # write_results("statistics.txt", stats)
     else:
         # create search algorithm object
         search_algorithm = create_search_algorithm(args.search_algorithm, map_data, args.start_city, args.end_city)
