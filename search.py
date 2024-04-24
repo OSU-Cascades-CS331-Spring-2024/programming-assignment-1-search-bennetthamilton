@@ -32,6 +32,18 @@ class SearchAlgorithm:
         self.nodes_expanded = 0     # the total number of successors
         self.nodes_maintained = 0   # the number of nodes stored in the frontier
 
+    def from_name(name, map_data, start_city, end_city):
+        if name == "bfs":
+            return BreadthFirstSearch(map_data, start_city, end_city)
+        elif name == "dls":
+            return IterativeDLS(map_data, start_city, end_city)
+        elif name == "ucs":
+            return UniformCostSearch(map_data, start_city, end_city)
+        elif name == "astar":
+            return AStarSearch(map_data, start_city, end_city)
+        else:
+            raise ValueError("Unknown search algorithm: {}".format(name))
+    
     def search(self):
         raise NotImplementedError
     
@@ -84,6 +96,9 @@ class BreadthFirstSearch(SearchAlgorithm):
                     self.explored.add(city)
                     self.parents[city] = current_city
 
+        # print success message
+        print("Success! Path found from {} to {}.".format(self.start_city, self.end_city))
+
 class IterativeDLS(SearchAlgorithm):
     def __init__(self, map_data, start_city, end_city, depth_limit=sys.maxsize):
         super().__init__(map_data, start_city, end_city)
@@ -108,6 +123,8 @@ class IterativeDLS(SearchAlgorithm):
         
         for depth in range(self.depth_limit):
             if recursive_dls(self.start_city, depth):
+                # print success message
+                print("Success! Path found from {} to {}.".format(self.start_city, self.end_city))
                 return True
 
         return False
@@ -139,6 +156,9 @@ class UniformCostSearch(SearchAlgorithm):
             self.nodes_explored += 1
             self.nodes_maintained = pq.qsize()
 
+        # print success message
+        print("Success! Path found from {} to {}.".format(self.start_city, self.end_city))
+
 
 class AStarSearch(SearchAlgorithm):
     def search(self):
@@ -166,6 +186,9 @@ class AStarSearch(SearchAlgorithm):
             # update metrics
             self.nodes_explored += 1
             self.nodes_maintained = pq.qsize()
+
+        # print success message
+        print("Success! Path found from {} to {}.".format(self.start_city, self.end_city))
 
     def heuristic(self, city):
         return self.map_data.get_coordinate_distance(city, self.end_city)
