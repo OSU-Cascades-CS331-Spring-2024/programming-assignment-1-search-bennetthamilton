@@ -20,7 +20,7 @@ class Map:
     def compute_path_distance(self, path):
         total_distance = 0
         for i in range(len(path) - 1):
-            total_distance += self.get_connection_distance(path[i], path[i+1])
+            total_distance += self.get_distance(path[i], path[i+1])
         return total_distance
     
     def get_coordinate_distance(self, city1, city2):
