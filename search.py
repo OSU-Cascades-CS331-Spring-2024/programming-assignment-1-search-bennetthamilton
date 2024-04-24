@@ -2,6 +2,7 @@
 #              iterative deepening depth-limited search, uniform-cost search, and A* search)
 
 # ref: https://docs.python.org/3/library/queue.html
+import sys
 import queue
 
 class SearchAlgorithm:
@@ -23,8 +24,8 @@ class SearchAlgorithm:
         self.map_data = map_data
         self.start_city = start_city
         self.end_city = end_city
+        self.parents = {}
         self.path = []
-        self.cost = 0
         self.frontier = []          # the queue of nodes to be expanded
         self.explored = set()       # the set of nodes that have been expanded
         self.nodes_explored = 0     # the number of nodes removed from the frontier
@@ -34,11 +35,19 @@ class SearchAlgorithm:
     def search(self):
         raise NotImplementedError
     
+    def get_path(self):
+        return self.path
+    
+    def construct_path(self):
+        current = self.end_city
+        while current is not None:
+            self.path.append(current)
+            current = self.parents[current]
+        self.path.reverse()
+        
+    
 # Subclasses: BFS, IDS, UCS, A*
 class BreadthFirstSearch(SearchAlgorithm):
-    def __init__(self, map_data, start_city, end_city):
-        super().__init__(map_data, start_city, end_city)
-        self.parents = {}
 
     # ref: https://www.geeksforgeeks.org/python-program-for-breadth-first-search-or-bfs-for-a-graph/
     def search(self):
@@ -57,32 +66,93 @@ class BreadthFirstSearch(SearchAlgorithm):
             for city in self.map_data.connections[current_city]:
                 if city not in self.explored:
                     q.put(city)
+                    # update metrics
                     self.frontier.append(city)
                     self.explored.add(city)
                     self.parents[city] = current_city
 
-    def get_path(self):
-        # Reconstruct path from end city to start city
-        current = self.end_city
-        while current is not None:
-            self.path.append(current)
-            current = self.parents[current]
-        self.path.reverse()
-
 class IterativeDLS(SearchAlgorithm):
-    def search(self):
-        # todo: implement iterative depth-limited search
+    def __init__(self, map_data, start_city, end_city, depth_limit=sys.maxsize):
+        super().__init__(map_data, start_city, end_city)
+        self.depth_limit = depth_limit
 
-        pass
+    def search(self):
+
+        def recursive_dls(city, depth):
+            if depth == 0:
+                return False
+            if city == self.end_city:
+                return True
+            if depth > 0:
+                for connected_city in self.map_data.connections[city]:
+                    if recursive_dls(connected_city, depth-1):
+                        # update metrics
+                        self.nodes_explored += 1
+                        self.frontier.append(connected_city)
+                        self.explored.add(connected_city)
+                        self.parents[connected_city] = city
+                        return True
+        
+        for depth in range(self.depth_limit):
+            if recursive_dls(self.start_city, depth):
+                return True
+
+        return False
 
 class UniformCostSearch(SearchAlgorithm):
     def search(self):
-        # todo: implement uniform-cost search
+        pq = queue.PriorityQueue()
+        pq.put((0, self.start_city))
+        self.frontier.append(self.start_city)
+        self.explored.add(self.start_city)
+        cost_so_far = {self.start_city: 0}
 
-        pass
+        while not pq.empty():
+            current_cost, current_city = pq.get()
+            
+            if current_city == self.end_city:
+                break
+            
+            for city in self.map_data.connections[current_city]:
+                new_cost = current_cost + self.map_data.get_distance(current_city, city)
+                if city not in cost_so_far or new_cost < cost_so_far[city]:
+                    cost_so_far[city] = new_cost
+                    pq.put((new_cost, city))
+                    self.frontier.append(city)
+                    self.explored.add(city)
+                    self.parents[city] = current_city
+
+            # update metrics
+            self.nodes_explored += 1
+            self.nodes_maintained = pq.qsize()
+
 
 class AStarSearch(SearchAlgorithm):
     def search(self):
-        # todo: implement A* search
+        pq = queue.PriorityQueue()
+        pq.put((0 + self.heuristic(self.start_city), self.start_city))
+        self.frontier.append(self.start_city)
+        self.explored.add(self.start_city)
+        cost_so_far = {self.start_city: 0}
 
-        pass
+        while not pq.empty():
+            current_cost, current_city = pq.get()
+            
+            if current_city == self.end_city:
+                break
+            
+            for city in self.map_data.connections[current_city]:
+                new_cost = cost_so_far[current_city] + self.map_data.get_distance(current_city, city)
+                if city not in cost_so_far or new_cost < cost_so_far[city]:
+                    cost_so_far[city] = new_cost
+                    pq.put((new_cost + self.heuristic(city), city))
+                    self.frontier.append(city)
+                    self.explored.add(city)
+                    self.parents[city] = current_city
+
+            # update metrics
+            self.nodes_explored += 1
+            self.nodes_maintained = pq.qsize()
+
+    def heuristic(self, city):
+        return self.map_data.get_coordinate_distance(city, self.end_city)
