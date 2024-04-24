@@ -112,6 +112,11 @@ class IterativeDLS(SearchAlgorithm):
 
     def search(self):
         # ref: https://www.geeksforgeeks.org/iterative-deepening-searchids-iterative-deepening-depth-first-searchiddfs/
+        # initialize starting values
+        self.frontier.append(self.start_city)
+        self.explored.add(self.start_city)
+        self.parents = {self.start_city: None}
+
         def recursive_dls(city, depth):
             if depth == 0:
                 return False
@@ -137,10 +142,12 @@ class IterativeDLS(SearchAlgorithm):
 
 class UniformCostSearch(SearchAlgorithm):
     def search(self):
+        # initialize starting values
         pq = queue.PriorityQueue()
         pq.put((0, self.start_city))
         self.frontier.append(self.start_city)
         self.explored.add(self.start_city)
+        self.parents = {self.start_city: None}
         cost_so_far = {self.start_city: 0}
 
         while not pq.empty():
@@ -168,10 +175,12 @@ class UniformCostSearch(SearchAlgorithm):
 
 class AStarSearch(SearchAlgorithm):
     def search(self):
+        # initialize starting values
         pq = queue.PriorityQueue()
         pq.put((0 + self.heuristic(self.start_city), self.start_city))
         self.frontier.append(self.start_city)
         self.explored.add(self.start_city)
+        self.parents = {self.start_city: None}
         cost_so_far = {self.start_city: 0}
 
         while not pq.empty():
