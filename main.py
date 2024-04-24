@@ -76,14 +76,10 @@ def run_search(map, start_city, end_city, algorithm_type):
     # run search algorithm
     search_algorithm.search()
 
-# function to run all search algorithms
-def run_all_searches(map, start_city, end_city):
-    for algorithm in SEARCH_ALGOS:
-        run_search(map, start_city, end_city, algorithm)
-
-def get_results():
-    # todo
-    pass
+def get_results(search_algorithm):
+    # returns a dictionary of results from search algorithm
+    # [Initial City, Goal City, Search Algorithm, Path, Cost, Nodes Explored, Nodes Expanded, Nodes Maintained]
+    return search_algorithm.get_results()
 
 def write_results(file, results):
     with open(file, "w") as file:
@@ -91,8 +87,9 @@ def write_results(file, results):
     # print success message
     print(f"Results written to {file} successfully!")
 
-def compute_statistics(file):
+def compute_statistics(all_results):
     # todo
+    
     # print success message
     print("Statistics computed successfully!")
 
@@ -118,30 +115,35 @@ def main():
             ("Nice", "Nantes"),
             ("Caen", "Strasbourg")
         ]
+        all_results = []
         for start, goal in city_pairs:
-            # perform search for given city pairs using all search algorithm
-            run_all_searches(map_data, start, goal)
-            # get results
-            results = get_results()
+            # perform search for given city pairs using ALL search algorithm
+            for algorithm in SEARCH_ALGOS:
+                run_search(map_data, start, goal, algorithm)
+                # append results to list
+                all_results.append(get_results(algorithm))
+            
+            # write all results to file
+            write_results(all_results, "solutions.txt")
+
+            # get statistics from results list
+            stats = compute_statistics(all_results)
+
+            # write statistics to file
+            write_results("statistics.txt", stats)
     else:
         # perform search for given start and goal cities using specified search algorithm
         run_search(map_data, args.start_city, args.end_city, args.search_algorithm)
-        # get results
-        results = get_results()
-    
-    # write results to file
-    write_results("solutions.txt", results)
 
-    # get statistics from solution file
-    stats = compute_statistics("solutions.txt")
+        # get results from search algorithm
+        results = get_results(args.search_algorithm)
 
-    # write statistics to file
-    write_results("statistics.txt", stats)
+        # write results to file
+        write_results(results, "solutions.txt")
 
     # print success message
     print("Program completed successfully!")
-
-        
+  
 
 if __name__ == "__main__":
     main()
