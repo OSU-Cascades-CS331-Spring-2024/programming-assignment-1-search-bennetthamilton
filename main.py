@@ -112,15 +112,15 @@ def main():
     # if start and end are not provided, use predefined city pairs
     if not (args.start_city and args.end_city):
         city_pairs = [
-            ("Brest", "Nice"),
-            ("Montpellier", "Calais"),
-            ("Strasbourg", "Bordeaux"),
-            ("Paris", "Grenoble"),
-            ("Grenoble", "Paris"),
-            ("Brest", "Grenoble"),
-            ("Grenoble", "Brest"),
-            ("Nice", "Nantes"),
-            ("Caen", "Strasbourg")
+            ("brest", "nice"),
+            ("montpellier", "calais"),
+            ("strasbourg", "bordeaux"),
+            ("paris", "grenoble"),
+            ("grenoble", "paris"),
+            ("brest", "grenoble"),
+            ("grenoble", "brest"),
+            ("nice", "nantes"),
+            ("caen", "strasbourg")
         ]
         all_results = []
         for start, goal in city_pairs:
@@ -131,7 +131,7 @@ def main():
                 # run search algorithm
                 run_search(map_data, start, goal, search_algorithm)
                 # append results to list
-                all_results.append(get_results(algorithm))
+                all_results.append(get_results(search_algorithm))
             
             # write all results to file
             write_results(all_results, "solutions.txt")
