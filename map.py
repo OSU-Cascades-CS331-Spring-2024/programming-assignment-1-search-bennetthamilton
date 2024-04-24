@@ -1,4 +1,6 @@
 # Descriptions: Map class to represent a map of cities (obj) and connections (dict)
+import math
+
 class Map:
     def __init__(self):
         self.cities = {}
@@ -20,3 +22,8 @@ class Map:
         for i in range(len(path) - 1):
             total_distance += self.get_connection_distance(path[i], path[i+1])
         return total_distance
+    
+    def get_coordinate_distance(self, city1, city2):
+        lat1, long1 = self.cities[city1].coordinates
+        lat2, long2 = self.cities[city2].coordinates
+        distance = math.sqrt((lat2 - lat1)**2 + (long2 - long1)**2)
