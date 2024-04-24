@@ -27,3 +27,4 @@ class Map:
         lat1, long1 = self.cities[city1].coordinates
         lat2, long2 = self.cities[city2].coordinates
         distance = math.sqrt((lat2 - lat1)**2 + (long2 - long1)**2)
+        return distance
