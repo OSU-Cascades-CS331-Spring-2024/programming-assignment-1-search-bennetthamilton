@@ -4,6 +4,7 @@
 # ref: https://docs.python.org/3/library/queue.html
 import sys
 import queue
+import json
 
 class SearchAlgorithm:
     # ref: https://www.digitalocean.com/community/tutorials/python-static-method
@@ -59,7 +60,7 @@ class SearchAlgorithm:
 
     def get_results(self):
         self.construct_path()
-        return {
+        result_dict = {
             "initial_city": self.start_city,
             "goal_city": self.end_city,
             "algorithm": self.__class__.__name__,
@@ -69,6 +70,10 @@ class SearchAlgorithm:
             "nodes_expanded": self.nodes_expanded,
             "nodes_maintained": self.nodes_maintained
         }
+        # convert results to string from dict
+        # ref: https://docs.python.org/3/library/json.html
+        results = json.dumps(result_dict, indent=4)
+        return results
         
     
 # Subclasses: BFS, IDS, UCS, A*
