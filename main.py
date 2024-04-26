@@ -20,6 +20,17 @@ SEARCH_ALGOS = ["bfs",
                 "ucs", 
                 "astar"]
 DEFAULT_SEARCH_ALGO = "bfs"
+PATH_SET = [
+            ("brest", "nice"),
+            ("montpellier", "calais"),
+            ("strasbourg", "bordeaux"),
+            ("paris", "grenoble"),
+            ("grenoble", "paris"),
+            ("brest", "grenoble"),
+            ("grenoble", "brest"),
+            ("nice", "nantes"),
+            ("caen", "strasbourg")
+        ]
 
 # function to parse command line arguments
 # ref: https://docs.python.org/3/library/argparse.html
@@ -84,8 +95,13 @@ def run_search(map, start_city, end_city, algorithm_obj):
     # run search algorithm
     algorithm_obj.search()
 
+def get_results_str(search_algorithm):
+    # returns a str of results from search algorithm
+    # [Initial City, Goal City, Search Algorithm, Path, Cost, Nodes Explored, Nodes Expanded, Nodes Maintained]
+    return search_algorithm.get_results_str()
+
 def get_results(search_algorithm):
-    # returns a dictionary of results from search algorithm
+    # returns a dict of results from search algorithm
     # [Initial City, Goal City, Search Algorithm, Path, Cost, Nodes Explored, Nodes Expanded, Nodes Maintained]
     return search_algorithm.get_results()
 
@@ -96,10 +112,39 @@ def write_results(file, results):
     print(f"Results written to {file.name} successfully!")
 
 def compute_statistics(all_results):
-    # todo
+    # initialize statistics dict
+    algorithm_stats = {}
+
+    # loop through all algorithms and compute averages
+    for algorithm in SEARCH_ALGOS:
+        # get results for current algorithm
+        results = [result for result in all_results if result["algorithm"] == algorithm]
+
+        # get statistics for current algorithm
+        num_paths = len(PATH_SET)
+        total_explored = sum([result["nodes_xplored"] for result in results])
+        total_expanded = sum([result["nodes_xpanded"] for result in results])
+        total_maintained = sum([result["nodes_aintained"] for result in results])
+
+        # compute average values
+        avg_explored = total_explored / num_paths
+        avg_expanded = total_expanded / num_paths
+        avg_maintained = total_maintained / num_paths
+
+        # add statistics to dictionary
+        algorithm_stats[algorithm] = {
+            "Average Nodes Explored": avg_explored,
+            "Average Nodes Expanded": avg_expanded,
+            "Average Nodes Maintained": avg_maintained
+        }
+
+    # TODO find optimal cost for each path and add to algorithms' statistics
     
     # print success message
     print("Statistics computed successfully!")
+
+    # convert statistics to string
+    return json.dumps(algorithm_stats, indent=4)
 
 # main function to run program
 def main():
@@ -112,17 +157,7 @@ def main():
 
     # if start and end are not provided, use predefined city pairs
     if not (args.start_city and args.end_city):
-        city_pairs = [
-            ("brest", "nice"),
-            ("montpellier", "calais"),
-            ("strasbourg", "bordeaux"),
-            ("paris", "grenoble"),
-            ("grenoble", "paris"),
-            ("brest", "grenoble"),
-            ("grenoble", "brest"),
-            ("nice", "nantes"),
-            ("caen", "strasbourg")
-        ]
+        city_pairs = PATH_SET
         all_results_lst = []
         for start, goal in city_pairs:
             # perform search for given city pairs using ALL search algorithm
@@ -134,17 +169,17 @@ def main():
                 # append results to list
                 all_results_lst.append(get_results(search_algorithm))
 
-            # convert all results to string TODO
+            # convert all results to string
             all_results = json.dumps(all_results_lst, indent=4)
             
             # write all results to file
             write_results("solutions.txt", all_results)
 
-            # # get statistics from results list
-            # stats = compute_statistics(all_results)
+            # get statistics from results list
+            stats = compute_statistics(all_results_lst)
 
-            # # write statistics to file
-            # write_results("statistics.txt", stats)
+            # write statistics to file
+            write_results("statistics.txt", stats)
     else:
         # create search algorithm object
         search_algorithm = create_search_algorithm(args.search_algorithm, map_data, args.start_city, args.end_city)
@@ -153,7 +188,7 @@ def main():
         run_search(map_data, args.start_city, args.end_city, search_algorithm)
 
         # get results from search algorithm
-        results = get_results(search_algorithm)
+        results = get_results_str(search_algorithm)
 
         # write results to file
         write_results("solutions.txt", results)
